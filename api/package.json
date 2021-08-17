@@ -1,0 +1,20 @@
+{
+    "name": "api",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "dependencies": {
+        "@google-cloud/vision": "^2.3.7",
+        "captionbot": "^1.0.2",
+        "express": "^4.17.1",
+        "translate": "^1.2.3"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "set GOOGLE_APPLICATION_CREDENTIALS=D:\\quiet-bruin-323100-17477c38d349.json",
+        "start": "nodemon ./bin/server.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}
