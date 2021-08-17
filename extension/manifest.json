@@ -1,0 +1,9 @@
+{
+  "name": "vision-sentinel",
+  "version": "1.0",
+  "description": "Vision Sentinel é uma extensão que captura as imagens da página e geram uma descrição alternativa no atributo alt da tag, ou seja, ela modifica o atributo alt das imagens que não apresentam um texto alternativo, facilitando na hora da compreensão de conteúdo para pessoas com deficiências visuais.",
+  "browser_action": {
+    "default_popup": "index.html"
+  },
+  "manifest_version": 2
+}
