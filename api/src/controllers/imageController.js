@@ -26,6 +26,10 @@ async function translateSentence(sentence, captionLanguage) {
 // Request handler
 exports.post = async(req, res, next) => {
     try {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'POST');
+        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
         // Getting parameters from request body
         let imageUrl = req.body.url;
         let captionLanguage = req.body.language ? req.body.language : "pt";
