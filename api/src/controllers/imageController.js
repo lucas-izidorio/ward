@@ -38,11 +38,14 @@ exports.post = async(req, res, next) => {
         let labels = await findLabels(imageUrl);
 
         // Getting translated caption
-        let caption = await translateSentence("Image content:", captionLanguage);
-        await labels.reduce(async(memo, label) => {
-            await memo;
-            caption += " " + await translateSentence(label.description, captionLanguage) + ",";
-        }, undefined);
+        let caption = "WARD: Não foi possível descrever a imagem.";
+        if (labels.length > 0) {
+            caption = await translateSentence("WARD: A imagem pode conter os seguintes elementos: ", captionLanguage);
+            await labels.reduce(async(memo, label) => {
+                await memo;
+                caption += " " + await translateSentence(label.description, captionLanguage) + ",";
+            }, undefined);
+        }
 
         // Returning result to client
         res.status(200).send({
