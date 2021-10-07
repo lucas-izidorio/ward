@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var json = JSON.stringify(data);
 
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", 'https://7759-2804-7f2-2990-e53b-8d75-879d-e16a-efc5.ngrok.io/images/');
+        xhr.open("POST", 'https://1dcf-2804-7f2-2990-e53b-cd0e-fb0f-2f86-6cb.ngrok.io/images/');
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.onload = function () {
           var jsonResponse = JSON.parse(xhr.responseText);
@@ -52,4 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
       console.log(results[0]);
     });
   });
+
+  const button = document.getElementById('button-test');
+  button.click();
 })
