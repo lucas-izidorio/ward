@@ -18,7 +18,7 @@ window.onload = function () {
 
     //Muda o atributo alt da tag img
     function changeAlt(caption, index) {
-      srcList[index].alt = alt + ' ' + caption;
+      srcList[index].alt = srcList[index].alt + ' ' + caption;
     }
 
     //Função para request na API
@@ -32,7 +32,7 @@ window.onload = function () {
       var json = JSON.stringify(data);
 
       var xhr = new XMLHttpRequest();
-      xhr.open("POST", 'localhost:3000/images/');
+      xhr.open("POST", 'http://localhost:3000/images/');
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.onload = function () {
         var jsonResponse = JSON.parse(xhr.responseText);
