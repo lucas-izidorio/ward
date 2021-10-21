@@ -1,0 +1,33 @@
+body, p, h1 {
+  margin: 0;
+  font-family: 'Poppins';
+}
+
+.container {
+  padding: 10px;
+  background-image: linear-gradient(to right, #741d96, #fc1754);
+  width: 200px;
+}
+
+.content {
+  padding: 5px;
+  background-color: white;
+}
+
+.title {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  place-content: center;
+}
+
+.title img {
+  width: 25px;
+  height: 25px;
+  margin-left: 5px;
+}
+
+p {
+  padding: 0 10px;
+  text-align: justify;
+}

@@ -20,11 +20,12 @@ async function findLabels(url) {
 
 // Function to translate sentences to desired language
 async function translateSentence(sentence, captionLanguage) {
+    return sentence;
     return await translate(sentence, captionLanguage);
 }
 
 // Request handler
-exports.post = async(req, res, next) => {
+exports.post = async (req, res, next) => {
     try {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Allow-Methods', 'POST');
@@ -41,7 +42,7 @@ exports.post = async(req, res, next) => {
         let caption = "WARD: Não foi possível descrever a imagem.";
         if (labels.length > 0) {
             caption = await translateSentence("WARD: A imagem pode conter os seguintes elementos: ", captionLanguage);
-            await labels.reduce(async(memo, label) => {
+            await labels.reduce(async (memo, label) => {
                 await memo;
                 caption += " " + await translateSentence(label.description, captionLanguage) + ",";
             }, undefined);

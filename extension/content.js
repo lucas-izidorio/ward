@@ -54,7 +54,7 @@ window.onload = function () {
     }
     waiting = true;
 
-    //getImages();
+    getImages();
 
     setTimeout(function () {
       waiting = false;
