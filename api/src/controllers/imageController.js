@@ -1,15 +1,27 @@
 // Google Cloud Vision
 const vision = require('@google-cloud/vision');
+const { GoogleAuth, grpc } = require('google-gax');
 
 // Translate API
 const translate = require("translate");
 translate.engine = "google";
-translate.key = "AIzaSyBr6e2QmvLnuSbHcmimFdjQeu8MeSrpiGA";
+
+function getApiKeyCredentials(apiKey) {
+    const sslCreds = grpc.credentials.createSsl();
+    const googleAuth = new GoogleAuth();
+    const authClient = googleAuth.fromAPIKey(apiKey);
+    const credentials = grpc.credentials.combineChannelCredentials(
+        sslCreds,
+        grpc.credentials.createFromGoogleCredential(authClient)
+    );
+    return credentials;
+}
 
 // Function to find labels of an image (using Google's API)
-async function findLabels(url) {
+async function findLabels(url, apiKey) {
+    const sslCreds = getApiKeyCredentials(apiKey);
     // Client instance
-    const client = new vision.ImageAnnotatorClient();
+    const client = new vision.ImageAnnotatorClient({ sslCreds });
 
     // Request on Google's API
     const [result] = await client.labelDetection(url);
@@ -20,12 +32,11 @@ async function findLabels(url) {
 
 // Function to translate sentences to desired language
 async function translateSentence(sentence, captionLanguage) {
-    return sentence;
     return await translate(sentence, captionLanguage);
 }
 
 // Request handler
-exports.post = async (req, res, next) => {
+exports.post = async(req, res, next) => {
     try {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Allow-Methods', 'POST');
@@ -33,16 +44,18 @@ exports.post = async (req, res, next) => {
 
         // Getting parameters from request body
         let imageUrl = req.body.url;
+        let apiKey = req.body.key;
+        translate.key = apiKey;
         let captionLanguage = req.body.language ? req.body.language : "pt";
 
         // Getting labels from Google's Vision API
-        let labels = await findLabels(imageUrl);
+        let labels = await findLabels(imageUrl, apiKey);
 
         // Getting translated caption
         let caption = "WARD: Não foi possível descrever a imagem.";
         if (labels.length > 0) {
             caption = await translateSentence("WARD: A imagem pode conter os seguintes elementos: ", captionLanguage);
-            await labels.reduce(async (memo, label) => {
+            await labels.reduce(async(memo, label) => {
                 await memo;
                 caption += " " + await translateSentence(label.description, captionLanguage) + ",";
             }, undefined);
