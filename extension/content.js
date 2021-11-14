@@ -1,148 +1,103 @@
-window.onload = function () {
+window.onload = function() {
 
-  var apikey;
+    var apikey;
 
-  chrome.storage.sync.get(['apiKey'], function (items) {
-    apikey = items;
+    chrome.storage.sync.get(['apiKey'], function(item) {
+        apikey = item;
 
-    var srcList = [];
-    var pos = 0;
+        var imagens = new Map();
 
-    //Função para request na API
-    function sendJSON(imageSrc, index, foto) {
+        //Função para request na API
+        function sendJSON(imageSrc, useGoogleVision) {
+            var data = {
+                "url": imageSrc,
+                "language": "pt",
+                "key": apikey.apiKey,
+                "vision": useGoogleVision,
+                "caption": imagens.get(imageSrc).alt
+            }
 
-      //console.log(imageSrc);
+            var json = JSON.stringify(data);
 
-      /*var data = {
-        "url": imageSrc,
-        "language": "pt",
-        "key": apikey.apiKey
-      }
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", 'http://localhost:3000/images/');
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onload = function() {
+                var jsonResponse = JSON.parse(xhr.responseText);
+                changeAlt(jsonResponse.caption, imageSrc);
+            };
+            xhr.send(json);
+        };
 
-      var json = JSON.stringify(data);
-
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", 'http://localhost:3000/images/');
-      xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.onload = function () {
-        var jsonResponse = JSON.parse(xhr.responseText);
-        changeAlt(jsonResponse.caption, index);
-        console.log(imageSrc, index);
-        console.log(jsonResponse.caption);
-      };
-      xhr.send(json);*/
-    };
-
-    const twitterCheck = (imageSrc, index, foto) => {
-      if (foto.offsetWidth > 64 && foto.offsetHeight > 64) {
-        sendJSON(imageSrc, index, foto);
-      }
-    }
-
-    const facebookCheck = (imageSrc, index, foto) => {
-      if (foto.offsetWidth > 64 && foto.offsetHeight > 64) {
-        sendJSON(imageSrc, index, foto);
-      }
-    }
-
-    const instagramCheck = (imageSrc, index, foto) => {
-      if (foto.offsetWidth > 64 && foto.offsetHeight > 64) {
-        sendJSON(imageSrc, index, foto);
-      }
-    }
-
-    const regularCheck = (imageSrc, index, foto) => {
-
-    }
-
-    const getImages = () => {
-      var images = document.getElementsByTagName('img');
-
-
-      for (var i = pos; i < images.length; i++) {
-        srcList.push(images[i]);
-      };
-
-      pos = images.length;
-
-      srcList.map(function (foto, index) {
-        if (window.location.href.includes('instagram.com')) {
-          instagramCheck(foto.src, index, foto);
-        } else if (window.location.href.includes('twitter.com')) {
-          twitterCheck(foto.src, index, foto);
-        } else if (window.location.href.includes('facebook.com')) {
-          facebookCheck(foto.src, index, foto);
-        } else {
-          regularCheck(foto.src, index, foto);
+        function changeAlt(caption, imageSrc) {
+            imagens.get(imageSrc).alt = caption;
         }
-      });
 
-      /*
+        const twitterCheck = (imageSrc, foto) => {
+            var useGoogleVision = true;
+            if (foto.offsetWidth > 64 && foto.offsetHeight > 64) {
+                sendJSON(imageSrc, useGoogleVision);
+            }
+        }
 
-      //Muda o atributo alt da tag img
-      function changeAlt(caption, index) {
-        srcList[index].alt = srcList[index].alt + ' ' + caption;
-      }*/
-    }
+        const facebookCheck = (imageSrc, foto) => {
+            var useGoogleVision = true;
+            if (foto.offsetWidth > 64 && foto.offsetHeight > 64) {
+                sendJSON(imageSrc, useGoogleVision);
+            }
+        }
 
-    const getNewImages = () => {
-      var newList = [];
+        const instagramCheck = (imageSrc, foto) => {
+            var useGoogleVision = true;
+            if (foto.offsetWidth > 64 && foto.offsetHeight > 64) {
+                sendJSON(imageSrc, useGoogleVision);
+            }
+        }
 
-      var images = document.getElementsByTagName('img');
+        const regularCheck = (imageSrc, foto) => {
 
-      console.log(srcList.length);
-      console.log(images.length);
+        }
 
-      if (images.length > srcList.length) {
-        for (var i = srcList.length; i < images.length; i++) {
-          newList.push(images[i]);
+        const getImages = () => {
+            var images = document.getElementsByTagName('img');
+
+            for (var i = 0; i < images.length; i++) {
+                var img = images[i];
+                if (!imagens.has(img.src)) {
+                    imagens.set(img.src, img);
+                    if (window.location.href.includes('instagram.com')) {
+                        instagramCheck(foto.src, foto);
+                    } else if (window.location.href.includes('twitter.com')) {
+                        twitterCheck(foto.src, foto);
+                    } else if (window.location.href.includes('facebook.com')) {
+                        facebookCheck(foto.src, foto);
+                    } else {
+                        regularCheck(foto.src, foto);
+                    }
+                }
+            };
+        }
+
+        var waiting = true;
+
+        setTimeout(function() {
+            getImages();
+            setTimeout(function() {
+                waiting = false;
+            }, 1000);
+        }, 4000);
+
+        window.onscroll = function() {
+            if (waiting) {
+                return;
+            }
+            waiting = true;
+
+            getImages();
+
+            setTimeout(function() {
+                waiting = false;
+            }, 2000);
         };
-
-        console.log(newList);
-
-        newList.map(function (foto, index) {
-          if (window.location.href.includes('instagram.com')) {
-            instagramCheck(foto.src, index, foto);
-          } else if (window.location.href.includes('twitter.com')) {
-            twitterCheck(foto.src, index, foto);
-          } else if (window.location.href.includes('facebook.com')) {
-            facebookCheck(foto.src, index, foto);
-          } else {
-            regularCheck(foto.src, index, foto);
-          }
-        });
-
-        srcList = [];
-
-        for (var i = 0; i < images.length; i++) {
-          srcList.push(images[i]);
-        };
-
-        console.log(srcList);
-      }
-    }
-
-    var waiting = true;
-
-    setTimeout(function () {
-      getImages();
-      setTimeout(function () {
-        waiting = false;
-      }, 1000);
-    }, 4000);
-
-    window.onscroll = function () {
-      if (waiting) {
-        return;
-      }
-      waiting = true;
-
-      getNewImages();
-
-      setTimeout(function () {
-        waiting = false;
-      }, 2000);
-
-    };
-  });
+    });
 }

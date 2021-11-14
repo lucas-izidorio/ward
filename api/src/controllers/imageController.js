@@ -47,18 +47,25 @@ exports.post = async(req, res, next) => {
         let apiKey = req.body.key;
         translate.key = apiKey;
         let captionLanguage = req.body.language ? req.body.language : "pt";
+        let useGoogleVision = req.body.vision;
+        let currentCaption = req.body.caption;
 
         // Getting labels from Google's Vision API
-        let labels = await findLabels(imageUrl, apiKey);
+        let labels = [];
+        if (useGoogleVision) {
+            labels = await findLabels(imageUrl, apiKey);
+        }
 
         // Getting translated caption
         let caption = "WARD: Não foi possível descrever a imagem.";
         if (labels.length > 0) {
-            caption = await translateSentence("WARD: A imagem pode conter os seguintes elementos: ", captionLanguage);
+            caption = await translateSentence(currentCaption + "... WARD: A imagem pode conter os seguintes elementos: ", captionLanguage);
             await labels.reduce(async(memo, label) => {
                 await memo;
                 caption += " " + await translateSentence(label.description, captionLanguage) + ",";
             }, undefined);
+        } else {
+            caption = await translateSentence(currentCaption, captionLanguage);
         }
 
         // Returning result to client
