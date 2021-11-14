@@ -7,4 +7,5 @@ O sistema WARD é uma extensão para o Google Chrome capaz de identificar imagen
 Para utilizar o sistema é necessário possuir uma chave de API do Google Cloud. Você pode criar uma chave de API seguindo os tutoriais disponíveis em:
 
 • Google Cloud Vision (https://cloud.google.com/vision/docs/setup)
+
 • Google Cloud Translate (https://cloud.google.com/translate/docs/basic/setup-basic?hl=pt)
