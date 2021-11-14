@@ -3,6 +3,14 @@ body, p, h1 {
   font-family: 'Poppins';
 }
 
+#btn {
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+  background-color: rgb(138, 35, 135);
+}
+
 .container {
   padding: 10px;
   background-image: linear-gradient(to right, #741d96, #fc1754);
@@ -25,6 +33,19 @@ body, p, h1 {
   width: 25px;
   height: 25px;
   margin-left: 5px;
+}
+
+.apikey-div {
+  margin-top: 10px;
+  padding: 0 10px;
+}
+
+.button-holder {
+  margin-top: 5px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  place-content: center;
 }
 
 p {

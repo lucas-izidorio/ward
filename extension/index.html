@@ -10,6 +10,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vision-Sentinel</title>
+  <script src="script.js"></script>
 </head>
 
 <body>
@@ -22,7 +23,14 @@
       <hr />
       <p>A extensão está rodando em segundo plano, basta usar um leitor de tela para a leitura
         das
-        descrições das imagens.</p>
+        descrições das imagens. Insira a chave da API para começar a utilizar a extensão.</p>
+      <div class="apikey-div">
+        <label>Chave da API: </label>
+        <input id="ward-input-apikey" placeholder="Insira a chave" type='text'></input>
+        <div class="button-holder">
+          <button id="btn" type="button">Registrar Chave</button>
+        </div>
+      </div>
     </div>
   </div>
 </body>
