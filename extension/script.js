@@ -5,6 +5,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var text = document.getElementById('ward-input-apikey').value;
 
+    var msg = document.getElementById('feedback-registro');
+
+    console.log(msg);
+
+    //msg.style.color = "blue;";
+    msg.setAttribute("style", "display: block;")
+
     chrome.storage.sync.set({ 'apiKey': text }, function () {
       console.log('Settings saved');
     });

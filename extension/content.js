@@ -1,8 +1,8 @@
-window.onload = function() {
+window.onload = function () {
 
     var apikey;
 
-    chrome.storage.sync.get(['apiKey'], function(item) {
+    chrome.storage.sync.get(['apiKey'], function (item) {
         apikey = item;
 
         var imagens = new Map();
@@ -22,7 +22,7 @@ window.onload = function() {
             var xhr = new XMLHttpRequest();
             xhr.open("POST", 'http://localhost:3000/images/');
             xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.onload = function() {
+            xhr.onload = function () {
                 var jsonResponse = JSON.parse(xhr.responseText);
                 changeAlt(jsonResponse.caption, imageSrc);
             };
@@ -36,6 +36,9 @@ window.onload = function() {
         const twitterCheck = (imageSrc, foto) => {
             var useGoogleVision = true;
             if (foto.offsetWidth > 64 && foto.offsetHeight > 64) {
+                if (foto.alt === undefined || foto.alt === '') {
+                    useGoogleVision = false;
+                }
                 sendJSON(imageSrc, useGoogleVision);
             }
         }
@@ -43,6 +46,9 @@ window.onload = function() {
         const facebookCheck = (imageSrc, foto) => {
             var useGoogleVision = true;
             if (foto.offsetWidth > 64 && foto.offsetHeight > 64) {
+                if (foto.alt === undefined || foto.alt === '') {
+                    useGoogleVision = false;
+                }
                 sendJSON(imageSrc, useGoogleVision);
             }
         }
@@ -50,12 +56,22 @@ window.onload = function() {
         const instagramCheck = (imageSrc, foto) => {
             var useGoogleVision = true;
             if (foto.offsetWidth > 64 && foto.offsetHeight > 64) {
+                console.log(foto.alt);
+                if (foto.alt !== undefined && foto.alt !== '' && foto.alt !== null) {
+                    useGoogleVision = false;
+                }
                 sendJSON(imageSrc, useGoogleVision);
             }
         }
 
         const regularCheck = (imageSrc, foto) => {
-
+            var useGoogleVision = true;
+            if (foto.offsetWidth > 64 && foto.offsetHeight > 64) {
+                if (foto.alt === undefined || foto.alt === '') {
+                    useGoogleVision = false;
+                }
+                sendJSON(imageSrc, useGoogleVision);
+            }
         }
 
         const getImages = () => {
@@ -66,13 +82,13 @@ window.onload = function() {
                 if (!imagens.has(img.src)) {
                     imagens.set(img.src, img);
                     if (window.location.href.includes('instagram.com')) {
-                        instagramCheck(foto.src, foto);
+                        instagramCheck(img.src, img);
                     } else if (window.location.href.includes('twitter.com')) {
-                        twitterCheck(foto.src, foto);
+                        twitterCheck(img.src, img);
                     } else if (window.location.href.includes('facebook.com')) {
-                        facebookCheck(foto.src, foto);
+                        facebookCheck(img.src, img);
                     } else {
-                        regularCheck(foto.src, foto);
+                        regularCheck(img.src, img);
                     }
                 }
             };
@@ -80,14 +96,14 @@ window.onload = function() {
 
         var waiting = true;
 
-        setTimeout(function() {
+        setTimeout(function () {
             getImages();
-            setTimeout(function() {
+            setTimeout(function () {
                 waiting = false;
             }, 1000);
         }, 4000);
 
-        window.onscroll = function() {
+        window.onscroll = function () {
             if (waiting) {
                 return;
             }
@@ -95,7 +111,7 @@ window.onload = function() {
 
             getImages();
 
-            setTimeout(function() {
+            setTimeout(function () {
                 waiting = false;
             }, 2000);
         };
