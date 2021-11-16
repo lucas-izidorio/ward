@@ -56,8 +56,7 @@ window.onload = function () {
         const instagramCheck = (imageSrc, foto) => {
             var useGoogleVision = true;
             if (foto.offsetWidth > 64 && foto.offsetHeight > 64) {
-                console.log(foto.alt);
-                if (foto.alt !== undefined && foto.alt !== '' && foto.alt !== null) {
+                if (foto.alt !== undefined && foto.alt !== '' && foto.alt !== null && !foto.alt.includes('May be an image')) {
                     useGoogleVision = false;
                 }
                 sendJSON(imageSrc, useGoogleVision);
