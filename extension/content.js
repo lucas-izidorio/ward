@@ -24,7 +24,9 @@ window.onload = function () {
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.onload = function () {
                 var jsonResponse = JSON.parse(xhr.responseText);
-                changeAlt(jsonResponse.caption, imageSrc);
+                if (jsonResponse.status === true) {
+                    changeAlt(jsonResponse.caption, imageSrc);
+                }
             };
             xhr.send(json);
         };
@@ -36,8 +38,10 @@ window.onload = function () {
         const twitterCheck = (imageSrc, foto) => {
             var useGoogleVision = true;
             if (foto.offsetWidth > 64 && foto.offsetHeight > 64) {
-                if (foto.alt === undefined || foto.alt === '') {
-                    useGoogleVision = false;
+                if (foto.alt !== undefined && foto.alt !== '' && foto.alt !== null) {
+                    if (foto.alt !== 'Imagem') {
+                        useGoogleVision = false;
+                    }
                 }
                 sendJSON(imageSrc, useGoogleVision);
             }
@@ -46,7 +50,7 @@ window.onload = function () {
         const facebookCheck = (imageSrc, foto) => {
             var useGoogleVision = true;
             if (foto.offsetWidth > 64 && foto.offsetHeight > 64) {
-                if (foto.alt === undefined || foto.alt === '') {
+                if (foto.alt !== undefined && foto.alt !== '' && foto.alt !== null && foto.alt.includes('Pode ser uma imagem')) {
                     useGoogleVision = false;
                 }
                 sendJSON(imageSrc, useGoogleVision);
